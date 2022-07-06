@@ -1,5 +1,7 @@
 import React from "react";
-import { StyleSheet, Dimensions, View } from "react-native";
+import { StyleSheet, Dimensions, View, TouchableOpacity, Image } from "react-native";
+import X from './../assets/x.png';
+import O from './../assets/circle.png';
 
 const BoardSize = {
   "3x3": 3,
@@ -7,9 +9,9 @@ const BoardSize = {
   "5x5": 5
 };
 
-export default function Board({ size }) {
+export default function Board({ map, size, onClick }) {
   // subtractions edge widths and margin from window width and divides to cell number
-  const cellWidth = (Dimensions.get('window').width - (styles.container.marginHorizontal * 2 - (size - 1) * styles.edgeV.width)) / size
+  const cellWidth = (Dimensions.get('window').width - (styles.container.marginHorizontal * 2 - (size - 1) * styles.edgeV.width)) / size;
 
   return (
     <View style={styles.container}>
@@ -17,7 +19,7 @@ export default function Board({ size }) {
         let edges = [];
         for (let i = 1; i < size; i++) {
           edges.push(
-            <View style={[styles.edgeV, { marginLeft: cellWidth * i }]}></View>
+            <View key={"v" + i} style={[styles.edgeV, { marginLeft: cellWidth * i }]}></View>
           );
         }
 
@@ -28,11 +30,52 @@ export default function Board({ size }) {
         let edges = [];
         for (let i = 1; i < size; i++) {
           edges.push(
-            <View style={[styles.edgeH, { marginTop: cellWidth * i }]}></View>
+            <View key={"h" + i} style={[styles.edgeH, { marginTop: cellWidth * i }]}></View>
           );
         }
 
         return edges;
+      })()}
+
+      {(() => {
+        let touchs = [];
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            console.log(`key (${i}, ${j}): ${Date.now() * (i + j)}`);
+            touchs.push(
+              <TouchableOpacity
+                key={Date.now() * (i + j)}
+                style={{
+                  position: 'absolute',
+                  marginTop: cellWidth * i,
+                  marginLeft: cellWidth * j,
+                  width: cellWidth,
+                  height: cellWidth,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                onPress={() => onClick(i, j)}>
+
+                {(() => {
+                  if (map[i][j] !== undefined) {
+                    const width = map[i][j] ? cellWidth : cellWidth / 2
+                    return (
+                      <Image
+                        source={(() => map[i][j] ? X : O)()}
+                        style={{
+                          width: width,
+                          height: width
+                        }}
+                      />
+                    );
+                  }
+                })()}
+              </TouchableOpacity>
+            );
+          }
+        }
+
+        return touchs;
       })()}
     </View>
   );
