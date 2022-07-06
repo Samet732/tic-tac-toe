@@ -29,9 +29,9 @@ export default class TicTacToe extends React.Component {
         map: map,
         player: !this.state.player
       });
-    }
 
-    this.check(map[i][j]);
+      this.check(map[i][j]);
+    }
   }
 
   check(lastMove) {
