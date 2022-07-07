@@ -7,18 +7,20 @@ export default class TicTacToe extends React.Component {
     super(props);
 
     // if map is 4x4 this code creates [[], [], [], []] value.
-    const map = [];
+    let map = [];
     for (let i = 0; i < props.map; i++)
       map.push([]);
 
     this.state = {
       map: map.slice(0), // x: true, o: false
       player: true, // true: player 1 (x), false: player 2 (o)
-      continuing: true
+      continuing: true,
+      goalIndexs: []
     };
 
     this.onClick = this.onClick.bind(this);
     this.check = this.check.bind(this);
+    this.finish = this.finish.bind(this);
   }
 
   onClick(i, j) {
@@ -35,13 +37,67 @@ export default class TicTacToe extends React.Component {
   }
 
   check(lastMove) {
-    // check: who won ?
+    console.log(lastMove);
+    // i row number, j column number
+    const map = this.state.map.slice(0);
+
+    function checker(i, i1, i2) {
+      if (
+        map[i[0]][i[1]] === map[i1[0]][i1[1]]
+        && map[i[0]][i[1]] === map[i2[0]][i2[1]]
+        && map[i1[0]][i1[1]] === map[i2[0]][i2[1]]
+        && map[i[0]][i[1]] === lastMove
+        && map[i1[0]][i1[1]] === lastMove
+        && map[i2[0]][i2[1]] === lastMove
+      ) return true;
+      else return false;
+    }
+
+    // checks rows
+    for (let i = 0; i < this.props.map; i++)
+      for (let j = 0; j < this.props.map - 2; j++)
+        if (checker([i, j], [i, j + 1], [i, j + 2]))
+          return this.finish([[i, j], [i, j + 1], [i, j + 2]]);
+
+    // checks columns
+    for (let i = 0; i < this.props.map - 2; i++)
+      for (let j = 0; j < this.props.map; j++)
+        if (checker([i, j], [i + 1, j], [i + 2, j]))
+          return this.finish([[i, j], [i + 1, j], [i + 2, j]]);
+
+    // checks cross
+    for (let i = 0; i < this.props.map - 2; i++)
+      for (let j = 0; j < this.props.map - 2; j++)
+        if (checker([i, j], [i + 1, j + 1], [i + 2, j + 2]))
+          return this.finish([[i, j], [i + 1, j + 1], [i + 2, j + 2]]);
+
+    // FIXME
+    // checks revrese cross
+    for (let i = this.props.map - 1; i > 1; i++)
+      for (let j = this.props.map; j > 1; j++)
+        if (checker([i, j], [i + 1, j - 1], [i + 2, j - 2]))
+          return this.finish([[i, j], [i + 1, j - 1], [i + 2, j - 2]]);
+  }
+
+  finish(indexs) {
+    this.setState({
+      goalIndexs: indexs,
+      continuing: false
+    });
+
+    console.log("win: " + indexs);
+    console.log(this.state.map);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Board map={this.state.map} size={this.props.map} onClick={this.onClick} />
+        <Board
+          map={this.state.map}
+          size={this.props.map}
+          onClick={this.onClick}
+          goalIndexs={this.state.goalIndexs}
+        />
       </View>
     );
   }
