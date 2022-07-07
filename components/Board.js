@@ -9,7 +9,7 @@ const BoardSize = {
   "5x5": 5
 };
 
-export default function Board({ map, size, onClick }) {
+export default function Board({ map, size, onClick, goalIndexs }) {
   // subtractions edge widths and margin from window width and divides to cell number
   const cellWidth = (Dimensions.get('window').width - (styles.container.marginHorizontal * 2 - (size - 1) * styles.edgeV.width)) / size;
 
@@ -52,7 +52,14 @@ export default function Board({ map, size, onClick }) {
                   width: cellWidth,
                   height: cellWidth,
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  backgroundColor: (() => {
+                    for (let k = 0; k < goalIndexs.length; k++)
+                      if (goalIndexs[k][0] === i && goalIndexs[k][1] === j)
+                        return '#66ff66';
+
+                    return 'transparent';
+                  })()
                 }}
                 onPress={() => onClick(i, j)}>
 
