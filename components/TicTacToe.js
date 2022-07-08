@@ -71,10 +71,9 @@ export default class TicTacToe extends React.Component {
         if (checker([i, j], [i + 1, j + 1], [i + 2, j + 2]))
           return this.finish([[i, j], [i + 1, j + 1], [i + 2, j + 2]]);
 
-    // FIXME
     // checks revrese cross
-    for (let i = this.props.map - 1; i > 1; i++)
-      for (let j = this.props.map; j > 1; j++)
+    for (let i = 0; i < this.props.map - 2; i++)
+      for (let j = this.props.map - 1; j > 1; j--)
         if (checker([i, j], [i + 1, j - 1], [i + 2, j - 2]))
           return this.finish([[i, j], [i + 1, j - 1], [i + 2, j - 2]]);
   }
