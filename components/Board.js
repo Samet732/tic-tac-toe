@@ -6,7 +6,9 @@ import O from './../assets/circle.png';
 const BoardSize = {
   "3x3": 3,
   "4x4": 4,
-  "5x5": 5
+  "5x5": 5,
+  "6x6": 6,
+  "7x7": 7
 };
 
 export default function Board({ map, size, onClick, goalIndexs }) {
@@ -41,10 +43,9 @@ export default function Board({ map, size, onClick, goalIndexs }) {
         let touchs = [];
         for (let i = 0; i < size; i++) {
           for (let j = 0; j < size; j++) {
-            console.log(`key (${i}, ${j}): ${Date.now() * (i + j)}`);
             touchs.push(
               <TouchableOpacity
-                key={Date.now() * (i + j)}
+                key={touchs.length + 1}
                 style={{
                   position: 'absolute',
                   marginTop: cellWidth * i,
