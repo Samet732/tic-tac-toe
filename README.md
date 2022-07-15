@@ -11,5 +11,5 @@ Tic tac toe game with different map sizes.
 If you seeing `TypeError: undefined is not an object (evaluating 'map[i3[0]][i3[1]]')` error, ignore this. It's unimportant.
 
 ### TODOs
-- [ ] fix unimportant TypeError
+- [ ] fix unimportant `TypeError`
 - [ ] add AI
